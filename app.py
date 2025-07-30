@@ -314,20 +314,18 @@ def extract_metrics_from_original(eval_df):
             metrics_data.append({
                 'Model': model,
                 'MAE': round(row[f'MAE_{model}'], 2),
-                'MSE': round(row[f'MSE_{model}'], 2),
                 'RMSE': round(row[f'RMSE_{model}'], 2),
                 'MAPE (%)': round(row[f'MAPE_{model}'], 2),
                 'WMAPE (%)': round(row[f'WMAPE_{model}'], 2)
             })
         return pd.DataFrame(metrics_data)
     else:
-        # Multiple entries - aggregate (mean for MAE/MSE/RMSE, median for MAPE/WMAPE)
+        # Multiple entries - aggregate (mean for MAE/RMSE, median for MAPE/WMAPE)
         metrics_data = []
         for model in models:
             metrics_data.append({
                 'Model': model,
                 'MAE': round(eval_df[f'MAE_{model}'].mean(), 2),
-                'MSE': round(eval_df[f'MSE_{model}'].mean(), 2),
                 'RMSE': round(eval_df[f'RMSE_{model}'].mean(), 2),
                 'MAPE (%)': round(eval_df[f'MAPE_{model}'].median(), 2),
                 'WMAPE (%)': round(eval_df[f'WMAPE_{model}'].median(), 2)
@@ -340,7 +338,7 @@ def load_original_summary(split_date, horizon, frequency='weekly'):
     eval_dir = f"data/evaluation_{split_date}_{horizon}"
     
     # Load pre-computed summaries (these are already correct)
-    for metric in ['MAE', 'MSE', 'RMSE', 'MAPE', 'WMAPE']:
+    for metric in ['MAE', 'RMSE', 'MAPE', 'WMAPE']:
         # Try new naming pattern first (2024-01-01 onwards)
         file_path = f"{eval_dir}/{frequency}_{metric.lower()}_summary.parquet"
         if os.path.exists(file_path):
@@ -826,7 +824,6 @@ def calculate_metrics_for_series(series_data):
             metrics_data.append({
                 'Model': model,
                 'MAE': round(mae, 2),
-                'MSE': round(mse, 2),
                 'RMSE': round(rmse, 2),
                 'MAPE (%)': round(mape, 2),
                 'WMAPE (%)': round(wmape, 2)
@@ -1285,7 +1282,7 @@ if app_mode == "🔍 Validation":
         with summary_cols[1]:
             summary_metric = st.selectbox(
                 "📏 Metric:",
-                ['RMSE', 'MAE', 'MAPE', 'WMAPE', 'MSE'],
+                ['RMSE', 'MAE', 'MAPE', 'WMAPE'],
                 index=0,
                 key="summary_metric"
             )
