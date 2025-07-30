@@ -1,0 +1,38 @@
+{
+  "LGB": {
+    "week": 1.0000,
+    "lag1": 0.3638,
+    "lag2": 0.2970,
+    "rolling_std_lag1_window_size4": 0.2834,
+    "lag52": 0.2480,
+    "lag8": 0.2003,
+    "lag4": 0.1948,
+    "lag26": 0.1676,
+    "rolling_std_lag4_window_size4": 0.1444,
+    "lag12": 0.1376
+  },
+  "XGB": {
+    "rolling_mean_lag1_window_size4": 1.0000,
+    "exponentially_weighted_mean_lag1_alpha0.3": 0.2879,
+    "rolling_mean_lag2_window_size4": 0.2531,
+    "subscriber_to_member_ratio": 0.1506,
+    "rolling_mean_lag1_window_size8": 0.1454,
+    "program_enc": 0.1173,
+    "rolling_mean_lag8_window_size4": 0.0578,
+    "lag1": 0.0242,
+    "lag52": 0.0228,
+    "rolling_mean_lag52_window_size4": 0.0132
+  },
+  "RF": {
+    "exponentially_weighted_mean_lag1_alpha0.3": 1.0000,
+    "rolling_mean_lag1_window_size4": 0.0847,
+    "rolling_mean_lag2_window_size8": 0.0640,
+    "rolling_mean_lag1_window_size8": 0.0492,
+    "rolling_mean_lag2_window_size4": 0.0359,
+    "lag1": 0.0322,
+    "rolling_mean_lag1_window_size12": 0.0196,
+    "rolling_mean_lag8_window_size4": 0.0125,
+    "lag52": 0.0101,
+    "week": 0.0089
+  }
+} 
