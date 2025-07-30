@@ -1405,14 +1405,22 @@ if app_mode == "🔍 Validation":
                     st.markdown(f"*{len(features)} features*")
                     
                     for feature in features:
-                        # Check if feature is in any model's top features
-                        is_important = False
-                        for model_data in feature_importance_data.values():
-                            if isinstance(model_data, dict) and feature in model_data:
-                                is_important = True
-                                break
+                        # Count how many models contain this feature
+                        model_count = 0
+                        models_with_feature = ['LGB', 'XGB', 'RF']  # The 3 tree-based models
                         
-                        if is_important:
+                        for model in models_with_feature:
+                            if (model in feature_importance_data and 
+                                isinstance(feature_importance_data[model], dict) and 
+                                feature in feature_importance_data[model]):
+                                model_count += 1
+                        
+                        # Display stars based on how many models contain the feature
+                        if model_count == 3:
+                            st.markdown(f"• **{feature}** ⭐⭐⭐")
+                        elif model_count == 2:
+                            st.markdown(f"• **{feature}** ⭐⭐")
+                        elif model_count == 1:
                             st.markdown(f"• **{feature}** ⭐")
                         else:
                             st.markdown(f"• {feature}")
