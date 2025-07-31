@@ -1,38 +1,38 @@
 {
   "LGB": {
     "week": 1.0,
-    "lag1": 0.3773,
-    "lag2": 0.33,
-    "lag52": 0.3101,
-    "rolling_std_lag1_window_size4": 0.2997,
-    "lag4": 0.2196,
-    "lag3": 0.2005,
-    "lag8": 0.1913,
-    "lag26": 0.1901,
-    "rolling_mean_lag1_window_size4": 0.1867
+    "lag1": 0.3787,
+    "lag2": 0.317,
+    "lag52": 0.3016,
+    "rolling_std_lag1_window_size4": 0.2928,
+    "lag4": 0.229,
+    "lag26": 0.1949,
+    "lag8": 0.1867,
+    "lag3": 0.1866,
+    "lag12": 0.1689
   },
   "XGB": {
     "rolling_mean_lag1_window_size4": 0.8476,
-    "rolling_mean_lag1_window_size12": 0.5061,
-    "rolling_mean_lag2_window_size4": 0.3869,
-    "exponentially_weighted_mean_lag1_alpha0.3": 0.3163,
-    "rolling_mean_lag1_window_size8": 0.3048,
+    "rolling_mean_lag1_window_size12": 0.505,
+    "rolling_mean_lag2_window_size4": 0.3668,
+    "exponentially_weighted_mean_lag1_alpha0.3": 0.3088,
+    "rolling_mean_lag1_window_size8": 0.3056,
     "subscriber_to_member_ratio": 0.1428,
-    "program_enc": 0.1381,
+    "program_enc": 0.131,
     "rolling_mean_lag8_window_size4": 0.05,
     "rolling_mean_lag26_window_size4": 0.0442,
-    "lag52": 0.0238
+    "lag52": 0.0234
   },
   "RF": {
     "exponentially_weighted_mean_lag1_alpha0.3": 1.0,
-    "rolling_mean_lag1_window_size4": 0.4094,
-    "rolling_mean_lag2_window_size8": 0.0835,
+    "rolling_mean_lag1_window_size4": 0.4178,
+    "rolling_mean_lag2_window_size8": 0.079,
     "rolling_mean_lag52_window_size4": 0.0594,
-    "rolling_mean_lag2_window_size4": 0.0477,
-    "rolling_mean_lag1_window_size8": 0.0403,
-    "rolling_mean_lag1_window_size12": 0.0368,
-    "lag1": 0.0326,
+    "rolling_mean_lag2_window_size4": 0.0444,
+    "rolling_mean_lag1_window_size8": 0.0387,
+    "rolling_mean_lag1_window_size12": 0.0382,
+    "lag1": 0.0253,
     "rolling_mean_lag3_window_size8": 0.023,
-    "lag52": 0.0128
+    "rolling_mean_lag8_window_size4": 0.0172
   }
 }

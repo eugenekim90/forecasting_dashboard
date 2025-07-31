@@ -40,6 +40,7 @@ def series_metrics(df, horizon=13, target='y',
             ŷ      = last[m].to_numpy()
             err    = y - ŷ
             mae    = np.abs(err).mean()
+            mse    = (err**2).mean()
             rmse   = np.sqrt(mse)
 
             # series‐level MAPE (skip zeros, but if no nonzero y → 0%)
