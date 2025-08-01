@@ -301,7 +301,7 @@ def filter_original_evaluation(eval_df, selected_level, selected_company, select
 
 def extract_metrics_from_original(eval_df):
     """Extract metrics from original evaluation files"""
-    models = ['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble']
+    models = ['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML']
     
     if eval_df.empty:
         return pd.DataFrame()
@@ -354,7 +354,7 @@ def load_original_summary(split_date, horizon, frequency='weekly'):
         if metric in summary_tables:
             continue  # Skip if already loaded from pre-computed file
         level_data = {}
-        models = ['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble']
+        models = ['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML']
         
         level_mapping = {
             'overall': 'overall',
@@ -393,7 +393,7 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
     
     if level == "Overall":
         # Aggregate all data directly
-        agg_data = forecast_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+        agg_data = forecast_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
         agg_data['unique_id'] = 'Overall'
         return agg_data
     
@@ -401,7 +401,7 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
         if company:
             # Specific company - aggregate across states and programs for this company
             company_data = forecast_data[forecast_data['company'] == company]
-            agg_data = company_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = company_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"Company_{company}"
             return agg_data
         else:
@@ -410,7 +410,7 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
             first_company = companies[0] if companies else None
             if first_company:
                 company_data = forecast_data[forecast_data['company'] == first_company]
-                agg_data = company_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+                agg_data = company_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
                 agg_data['unique_id'] = f"Company_Level_Sample_{first_company}"
                 return agg_data
             else:
@@ -420,7 +420,7 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
         if state:
             # Specific state - aggregate across companies and programs for this state
             state_data = forecast_data[forecast_data['state'] == state]
-            agg_data = state_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = state_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"State_{state}"
             return agg_data
         else:
@@ -429,7 +429,7 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
             first_state = states[0] if states else None
             if first_state:
                 state_data = forecast_data[forecast_data['state'] == first_state]
-                agg_data = state_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+                agg_data = state_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
                 agg_data['unique_id'] = f"State_Level_Sample_{first_state}"
                 return agg_data
             else:
@@ -439,7 +439,7 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
         if program:
             # Specific program - aggregate across companies and states for this program
             program_data = forecast_data[forecast_data['program'] == program]
-            agg_data = program_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = program_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"Program_{program}"
             return agg_data
         else:
@@ -448,7 +448,7 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
             first_program = programs[0] if programs else None
             if first_program:
                 program_data = forecast_data[forecast_data['program'] == first_program]
-                agg_data = program_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+                agg_data = program_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
                 agg_data['unique_id'] = f"Program_Level_Sample_{first_program}"
                 return agg_data
             else:
@@ -461,19 +461,19 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
                 (forecast_data['company'] == company) & 
                 (forecast_data['state'] == state)
             ]
-            agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"CompanyState_{company}_{state}"
             return agg_data
         elif company:
             # Specific company, aggregate across ALL states
             company_data = forecast_data[forecast_data['company'] == company]
-            agg_data = company_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = company_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"Company_{company}_AllStates"
             return agg_data
         elif state:
             # Specific state, aggregate across ALL companies
             state_data = forecast_data[forecast_data['state'] == state]
-            agg_data = state_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = state_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"AllCompanies_State_{state}"
             return agg_data
         else:
@@ -490,7 +490,7 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
                 ]
                 
                 if len(filtered_data) > 0:
-                    agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+                    agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
                     agg_data['unique_id'] = f"CompanyState_Sample_{first_company}_{first_state}"
                     return agg_data
             
@@ -503,19 +503,19 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
                 (forecast_data['company'] == company) & 
                 (forecast_data['program'] == program)
             ]
-            agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"CompanyProgram_{company}_{program}"
             return agg_data
         elif company:
             # Specific company, aggregate across ALL programs
             company_data = forecast_data[forecast_data['company'] == company]
-            agg_data = company_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = company_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"Company_{company}_AllPrograms"
             return agg_data
         elif program:
             # Specific program, aggregate across ALL companies
             program_data = forecast_data[forecast_data['program'] == program]
-            agg_data = program_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = program_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"AllCompanies_Program_{program}"
             return agg_data
         else:
@@ -532,7 +532,7 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
                 ]
                 
                 if len(filtered_data) > 0:
-                    agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+                    agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
                     agg_data['unique_id'] = f"CompanyProgram_Sample_{first_company}_{first_program}"
                     return agg_data
             
@@ -545,19 +545,19 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
                 (forecast_data['state'] == state) & 
                 (forecast_data['program'] == program)
             ]
-            agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"StateProgram_{state}_{program}"
             return agg_data
         elif state:
             # Specific state, aggregate across ALL programs
             state_data = forecast_data[forecast_data['state'] == state]
-            agg_data = state_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = state_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"State_{state}_AllPrograms"
             return agg_data
         elif program:
             # Specific program, aggregate across ALL states
             program_data = forecast_data[forecast_data['program'] == program]
-            agg_data = program_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = program_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"AllStates_Program_{program}"
             return agg_data
         else:
@@ -574,7 +574,7 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
                 ]
                 
                 if len(filtered_data) > 0:
-                    agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+                    agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
                     agg_data['unique_id'] = f"StateProgram_Sample_{first_state}_{first_program}"
                     return agg_data
             
@@ -598,7 +598,7 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
                 (forecast_data['company'] == company) & 
                 (forecast_data['state'] == state)
             ]
-            agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"CompanyState_{company}_{state}_AllPrograms"
             return agg_data
         elif company and program:
@@ -607,7 +607,7 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
                 (forecast_data['company'] == company) & 
                 (forecast_data['program'] == program)
             ]
-            agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"CompanyProgram_{company}_{program}_AllStates"
             return agg_data
         elif state and program:
@@ -616,25 +616,25 @@ def get_aggregated_data(forecast_data, level, company=None, state=None, program=
                 (forecast_data['state'] == state) & 
                 (forecast_data['program'] == program)
             ]
-            agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = filtered_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"AllCompanies_StateProgram_{state}_{program}"
             return agg_data
         elif company:
             # Only company selected, aggregate across ALL states and programs
             company_data = forecast_data[forecast_data['company'] == company]
-            agg_data = company_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = company_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"Company_{company}_AllStatesPrograms"
             return agg_data
         elif state:
             # Only state selected, aggregate across ALL companies and programs
             state_data = forecast_data[forecast_data['state'] == state]
-            agg_data = state_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = state_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"AllCompanies_State_{state}_AllPrograms"
             return agg_data
         elif program:
             # Only program selected, aggregate across ALL companies and states
             program_data = forecast_data[forecast_data['program'] == program]
-            agg_data = program_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+            agg_data = program_data.groupby('ds')[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             agg_data['unique_id'] = f"AllCompanies_AllStates_Program_{program}"
             return agg_data
         else:
@@ -713,8 +713,8 @@ def plot_forecast_single(series_data, series_name):
     
     fig = go.Figure()
     
-    models = ['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble']
-    colors = ['blue', 'green', 'red', 'orange', 'purple']
+    models = ['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML']
+    colors = ['blue', 'green', 'red', 'orange', 'purple', 'pink']
     
     series_data = series_data.sort_values('ds')
     
@@ -763,7 +763,7 @@ def plot_forecast_single(series_data, series_name):
 
 def calculate_metrics_for_series(series_data):
     """Calculate metrics for a single series or aggregated data"""
-    models = ['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble']
+    models = ['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML']
     metrics_data = []
     
     if series_data.empty or 'y' not in series_data.columns:
@@ -1125,7 +1125,7 @@ if app_mode == "🔍 Validation":
                 if series_frequency == "Monthly" and not agg_data.empty:
                     agg_data = agg_data.groupby(
                         ['unique_id', pd.Grouper(key='ds', freq='ME')]
-                    )[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'y']].sum().reset_index()
+                    )[['TimeGPT', 'LGB', 'XGB', 'RF', 'ensemble', 'ensemble_ML', 'y']].sum().reset_index()
             else:
                 agg_data = pd.DataFrame()  # No plot data for aggregated level metrics
             

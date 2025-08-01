@@ -15,7 +15,7 @@ def wmape_skip0(y, yhat):
     return np.nan if denom == 0 else np.abs(yhat[mask] - y[mask]).sum() / denom * 100
 
 def mape_zero_ok(y, yhat):
-    """Zeros contribute 0 % error (MAPE0)."""
+    """Zeros contribute 0 % error (MAPE0)."""
     denom = np.where(y == 0, 1, y)          # dummy 1 avoids /0 but cancels out
     return np.abs((yhat - y) / denom).mean() * 100
 
@@ -84,7 +84,7 @@ def metrics_summary(evaluation_metrics):
             .loc[['mean', '50%', 'std', 'min']]
             .rename(index={'50%': 'median'}))
     summ.columns = pd.MultiIndex.from_tuples(
-        c.split('_', 1) for c in summ.columns
+        c.split('_', 1) for c in summ.columns if '_' in c
     )
     summ = summ.sort_index(axis=1, level=[0,1])
     return summ.round(2).applymap(lambda x: f'{x:,.2f}').T
