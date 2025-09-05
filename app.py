@@ -143,7 +143,7 @@ def display_fallback_metrics(metrics_df):
     if not metrics_df.empty:
         st.dataframe(
             metrics_df,
-            use_container_width=True,
+            width="stretch",
             hide_index=True
         )
         
@@ -1033,7 +1033,7 @@ with st.sidebar:
                         selected_result = r
                         break
                 
-                if st.button("🔥 Load Results", type="primary", use_container_width=True):
+                if st.button("🔥 Load Results", type="primary", width="stretch"):
                     with st.spinner("Loading forecast data..."):
                         try:
                             # Load forecast data
@@ -1296,7 +1296,7 @@ if app_mode == "🔍 Validation":
                     series_name = get_series_display_name(selected_level, selected_company, selected_state, selected_program, forecast_data)
                     series_name += f" ({series_frequency})"
                     fig = plot_forecast_single(agg_data, series_name)
-                    st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, width="stretch")
                 else:
                     st.warning("No forecast data available for this combination")
             
@@ -1325,7 +1325,7 @@ if app_mode == "🔍 Validation":
                         if not metrics_df.empty:
                             st.dataframe(
                                 metrics_df,
-                                use_container_width=True,
+                                width="stretch",
                                 hide_index=True
                             )
                             
@@ -1364,7 +1364,7 @@ if app_mode == "🔍 Validation":
                             if not metrics_df.empty:
                                 st.dataframe(
                                     metrics_df,
-                                    use_container_width=True,
+                                    width="stretch",
                                     hide_index=True
                                 )
                                 
@@ -1446,7 +1446,7 @@ if app_mode == "🔍 Validation":
             summary_df = summary_tables[summary_metric]
             st.dataframe(
                 summary_df, 
-                use_container_width=True
+                width="stretch"
             )
         else:
             st.warning(f"⚠️ No pre-computed summary tables found for {frequency}")
@@ -1495,7 +1495,7 @@ if app_mode == "🔍 Validation":
                             textposition='outside'
                         )
                         
-                        st.plotly_chart(fig, use_container_width=True)
+                        st.plotly_chart(fig, width="stretch")
                     else:
                         st.info(f"{model} data not available")
             
@@ -1880,7 +1880,7 @@ else:  # Forecasting mode
                         )
                     )
                     
-                    st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, width="stretch")
                 
                                                 # Create enhanced forecast table for selected combination
                 st.subheader("📋 Forecast Data Table")
@@ -1916,7 +1916,7 @@ else:  # Forecasting mode
                 # Display the table with better styling
                 st.dataframe(
                     display_table_final, 
-                    use_container_width=True,
+                    width="stretch",
                     height=400,
                     hide_index=True
                 )
