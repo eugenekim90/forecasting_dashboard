@@ -1,0 +1,10 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter notebooks (development files)
+*.ipynb
+
+# Keep all data files - they're needed for the dashboard!
