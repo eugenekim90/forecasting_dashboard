@@ -8,7 +8,26 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import json
+import gc  # For garbage collection
 
+# Configure Streamlit for better performance
+st.set_page_config(
+    page_title="Forecasting Dashboard",
+    page_icon="📈", 
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+@st.cache_data
+def load_forecast_data(file_path):
+    """Load forecast data with caching to reduce memory usage"""
+    try:
+        return pd.read_parquet(file_path)
+    except Exception as e:
+        st.error(f"Error loading forecast file {file_path}: {e}")
+        return pd.DataFrame()
+
+@st.cache_data
 def load_feature_importance(split_date, horizon):
     """Load feature importance data for a specific period"""
     import json
@@ -182,6 +201,7 @@ def filter_evaluation_data(eval_df, selected_company, selected_state, selected_p
     
     return filtered_df
 
+@st.cache_data
 def load_original_evaluation(split_date, horizon, level, frequency='weekly'):
     """Load original evaluation files directly for exact number matching"""
     eval_dir = f"data/evaluation_{split_date}_{horizon}"
@@ -332,6 +352,7 @@ def extract_metrics_from_original(eval_df):
             })
         return pd.DataFrame(metrics_data)
 
+@st.cache_data
 def load_original_summary(split_date, horizon, frequency='weekly'):
     """Load overall summary from original evaluation files"""
     summary_tables = {}
@@ -784,13 +805,7 @@ def aggregate_intervals_hierarchical(forecast_with_intervals, level, company=Non
     
     return pd.DataFrame()
 
-# Set page config
-st.set_page_config(
-    page_title="Forecasting Dashboard",
-    page_icon="📈", 
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# Page config moved to top of file
 
 # Custom CSS for better styling
 st.markdown("""
@@ -1036,17 +1051,23 @@ with st.sidebar:
                 if st.button("🔥 Load Results", type="primary", width="stretch"):
                     with st.spinner("Loading forecast data..."):
                         try:
-                            # Load forecast data
-                            forecast_data = pd.read_parquet(selected_result['forecast_file'])
+                            # Load forecast data with caching
+                            forecast_data = load_forecast_data(selected_result['forecast_file'])
                             st.session_state.forecast_data = forecast_data
                             st.session_state.split_date = selected_result['split_date']
                             st.session_state.horizon = selected_result['horizon']
+                            
+                            # Force garbage collection to free memory
+                            gc.collect()
                             
                             st.success(f"✅ Loaded: {os.path.basename(selected_result['forecast_file'])}")
                             st.balloons()
                             
                         except Exception as e:
                             st.error(f"❌ Error loading file: {str(e)}")
+                            # Clear any partial data on error
+                            if 'forecast_data' in st.session_state:
+                                del st.session_state.forecast_data
             else:
                 st.warning("📂 No valid forecast files found")
         else:
@@ -1576,9 +1597,9 @@ else:  # Forecasting mode
     latest_forecast_file = 'data/all_bottom_forecast_latest.parquet'
     
     if os.path.exists(latest_forecast_file):
-        # Load the latest forecast data
+        # Load the latest forecast data with caching
         try:
-            df = pd.read_parquet(latest_forecast_file)
+            df = load_forecast_data(latest_forecast_file)
             df['ds'] = pd.to_datetime(df['ds'])
             
             # Get file info

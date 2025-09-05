@@ -1,0 +1,16 @@
+[server]
+fileWatcherType = "none"
+runOnSave = false
+headless = true
+
+[global]
+developmentMode = false
+
+[client]
+showErrorDetails = false
+
+[theme]
+primaryColor = "#9B59B6"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F0F2F6"
+textColor = "#262730" 
